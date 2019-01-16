@@ -25,8 +25,9 @@ public class TopMoviesRepository implements Repository {
 
     public TopMoviesRepository(MovieApiService movieApiService, MoreInfoApiService moreInfoApiService){
         this.mMoreInfoApiService = moreInfoApiService;
-        this.timestamp = System.currentTimeMillis();
         this.mMovieApiService = movieApiService;
+        // For caching
+        this.timestamp = System.currentTimeMillis();
         countries = new ArrayList<>();
         mResultList = new ArrayList<>();
     }

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Camera;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.edwinb.topmoviesdemoapp.BuildConfig;
 import com.example.edwinb.topmoviesdemoapp.Listeners.OnBottomReachedListener;
 import com.example.edwinb.topmoviesdemoapp.Listeners.ProgressListener;
 import com.example.edwinb.topmoviesdemoapp.R;

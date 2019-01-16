@@ -47,8 +47,20 @@ public class TopMoviesActivityTest {
     public ActivityTestRule<TopMoviesActivity> mActivityTestRule = new ActivityTestRule<>(TopMoviesActivity.class);
 
     // To automatically grant specific permissions that the device may use (For testing purposes)
+    // This will not be able to easily grant system protected level permissions. You need to grant
+    // these permissions from the ADB shell such as SET_ANIMATIONS_SCALE permission and add them to
+    // an AndroidManifest.xml file. If you do add these types of permissions to the AndroidManifest
+    // you would want to create a new AndroidManifest with the system level permission added
+    // and add the file to a debug product flavor for testing.
     @Rule
-    public GrantPermissionRule mGrantPermissionRule = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+    public GrantPermissionRule mGrantPermissionRule
+            = GrantPermissionRule.grant(Manifest.permission.CAMERA);
+
+    // Disables the System Protected Level SET_ANIMATION_SCALE permission and works only if
+    // you have GRANTED permission through the ADB shell after the apk has been installed.
+    // The system level permission also needs to be added to the AndroidManifest file.
+    @Rule
+    public DisableAnimationsRule mDisableAnimationsRule = new DisableAnimationsRule();
 
     // For waiting on Asynchronous calls (Network calls, background work etc.)
     private IdlingResource idlingResource;
@@ -117,7 +129,7 @@ public class TopMoviesActivityTest {
         idlingResource = new ElapsedTimeIdlingResource(waitingTime);
         IdlingRegistry.getInstance().register(idlingResource);
 
-        onView(withRecyclerView(R.id.recycler_view).atPosition(2)).check(matches(hasDescendant(withText(BOOK_TITLE_TO_TEST))));
+        onView(withRecyclerView(R.id.recycler_view).atPosition(3)).check(matches(hasDescendant(withText(BOOK_TITLE_TO_TEST))));
 
         // Clean up
         IdlingRegistry.getInstance().unregister(idlingResource);

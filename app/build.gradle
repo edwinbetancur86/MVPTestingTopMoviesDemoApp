@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -10,23 +11,125 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            // The file name of the keystore
+            storeFile file("release-key.keystore")
+            storePassword 'password'
+            keyAlias 'alias'
+            // Make sure you have the right password
+            keyPassword 'journaldev'
+        }
+
+        beta {
+            // The file name of the keystore
+            storeFile file("release-key.keystore")
+            storePassword 'password'
+            keyAlias 'alias'
+            // Make sure you have the right password
+            keyPassword 'journaldev'
+        }
+
+        alpha {
+            // The file name of the keystore
+            storeFile file("release-key.keystore")
+            storePassword 'password'
+            keyAlias 'alias'
+            // Make sure you have the right password
+            keyPassword 'journaldev'
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            // Signing is not needed for debug builds
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            buildConfigField "String", "TYPE", '"I AM A DEBUG NINJA"'
+            resValue "string", "my_name", "Ninja Debugger"
+        }
+
+        alpha {
+            signingConfig signingConfigs.beta
+            applicationIdSuffix ".alpha"
+            versionNameSuffix "-alpha"
+            buildConfigField "String", "TYPE", '"I AM A ALPHA NINJA"'
+            resValue "string", "my_name", "Ninja Beta"
+        }
+
+        beta {
+            signingConfig signingConfigs.beta
+            applicationIdSuffix ".beta"
+            versionNameSuffix "-beta"
+            buildConfigField "String", "TYPE", '"I AM A BETA NINJA"'
+            resValue "string", "my_name", "Ninja Beta"
+        }
+
     }
 
     compileOptions{
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    flavorDimensions "default"
+    productFlavors {
+        // This is for an app version build that will be for free members
+        freeVer {
+            // You can also add buildconfig fields in here
+            //buildConfigField("String", "ACTIVITY_TITLE", "Free Ver")
+
+            // You can change the app name or activity name directly with manifest placeholders
+            manifestPlaceholders = [appLabel: "TopMoviesFreeApp"]
+        }
+
+        // This is for an app version build that will be for paid members
+        paidVer {
+            // You can also add buildconfig fields in here
+            //buildConfigField("String", "ACTIVITY_TITLE", "Paid Ver")
+
+            // You can change the app name or activity name directly with manifest placeholders
+            manifestPlaceholders = [appLabel: "TopMoviesPaidApp"]
+        }
+
+        // This version contains a different AndroidManifest.xml with the set animations
+        // system level permission set
+        flavorTestVer {
+            // You can also add buildconfig fields in here
+            //buildConfigField("String", "ACTIVITY_TITLE", "Test Ver")
+
+            // You can change the app name or activity name directly with manifest placeholders
+            manifestPlaceholders = [appLabel: "TopMoviesTestApp"]
+        }
+
+    }
 }
 
+// Make sure ext block is on the top level for
 ext{
     retrofitVersion = '2.3.0'
     supportLibraryVersion = '28.0.0'
+    packageName = "com.example.edwinb.topmoviesdemoapp.debug"
 }
+
+// To automatically grant permission to one device [CURRENTLY NOT WORKING NEED TO FIGURE OUT HOW TO DEAL WITH THIS]
+/*task grantAnimationPermission(type: Exec, dependsOn: 'flavorTestVerDebug') { // or install{productFlavour}{buildType}
+    commandLine "adb shell pm grant $packageName android.permission.SET_ANIMATION_SCALE".split(' ')
+}
+
+// Depends on above ^
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('connectedAndroidTest')) {
+        task.dependsOn grantAnimationPermission
+    }
+}*/
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -44,6 +147,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
+
     // Set this dependency if you want to use Hamcrest matching
     testImplementation 'org.hamcrest:hamcrest-library:1.3'
     // Assertions
@@ -51,6 +155,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:truth:1.0.0'
     androidTestImplementation 'com.google.truth:truth:0.42'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    // Gson
     implementation 'com.google.code.gson:gson:2.8.4'
     // Http logging
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'

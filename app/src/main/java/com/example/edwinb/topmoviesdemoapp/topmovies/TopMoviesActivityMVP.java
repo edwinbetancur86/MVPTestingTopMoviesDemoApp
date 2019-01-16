@@ -5,7 +5,7 @@ import com.example.edwinb.topmoviesdemoapp.http.http.apimodel.Result;
 import io.reactivex.Observable;
 
 public interface TopMoviesActivityMVP {
-    interface View{
+    interface View {
         void updateData(ViewModel viewModel);
         void showSnackbar(String s);
     }

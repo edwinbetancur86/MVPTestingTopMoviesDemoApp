@@ -9,15 +9,18 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public interface Repository {
-    Observable<Result> getResultsFromMemory();
-    Observable<Result> getCachedResults(List<Result> results);
     Observable<TopRated> getTopRatedObservableFromApiService();
-    Observable<Result> getResultsFromNetwork();
+
     Observable<String> getCountriesFromMemory();
-    Observable<String> getCachedCountries(List<String> countries);
-    Observable<OmbdApi> getOmbdFromApiService(Result result);
     Observable<String> getCountriesFromNetwork();
     Observable<String> getCountryData();
+    Observable<String> getCachedCountries(List<String> countries);
+
+    Observable<OmbdApi> getOmbdFromApiService(Result result);
+
+    Observable<Result> getResultsFromNetwork();
+    Observable<Result> getResultsFromMemory();
+    Observable<Result> getCachedResults(List<Result> results);
     Observable<Result> getResultData();
 
 }
